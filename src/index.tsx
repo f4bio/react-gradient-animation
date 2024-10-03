@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 
+import { debounce, hexToRgb, isValidBlendingMode } from "./gradientUtils";
 import {
   GradientBackgroundProps,
   Particle,
   ParticleOptions,
-} from "../types/types";
-import { debounce, hexToRgb, isValidBlendingMode } from "./gradientUtils";
+} from "./types/types";
 
 const GradientBackground: React.FC<GradientBackgroundProps> = ({
   count = 12,

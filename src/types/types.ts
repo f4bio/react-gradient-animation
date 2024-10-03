@@ -2,9 +2,7 @@ import {
   getRandom,
   getRandomDirection,
   isValidBlendingMode,
-} from "../src/gradientUtils";
-import { OpacityConfig, ShapeType } from "./gradientTypes";
-import { ParticleOptions, RGB } from "./interface";
+} from "../gradientUtils";
 
 export class Particle {
   color: RGB;
@@ -163,8 +161,6 @@ export interface GradientBackgroundProps {
   translateYcorrection?: boolean;
   style?: React.CSSProperties;
 }
-
-import { ColorsConfig, SizeConfig, SpeedConfig } from "./gradientTypes";
 
 export interface RGB {
   r: number;

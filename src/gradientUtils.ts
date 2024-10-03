@@ -1,4 +1,4 @@
-import { RGB } from "../types/types";
+import { RGB } from "./types/types";
 
 // List of valid global composite operations
 const validBlendingModes: GlobalCompositeOperation[] = [

@@ -11,8 +11,8 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import React, { useEffect, useRef } from "react";
-import { Particle, } from "../types/types";
 import { debounce, hexToRgb, isValidBlendingMode } from "./gradientUtils";
+import { Particle, } from "./types/types";
 var GradientBackground = function (_a) {
     var _b = _a.count, count = _b === void 0 ? 12 : _b, _c = _a.size, size = _c === void 0 ? { min: 1000, max: 1200, pulse: 0.1 } : _c, _d = _a.speed, speed = _d === void 0 ? { x: { min: 0.6, max: 3 }, y: { min: 0.6, max: 3 } } : _d, _e = _a.colors, colors = _e === void 0 ? {
         background: "transparent",
