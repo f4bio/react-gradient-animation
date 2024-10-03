@@ -17,13 +17,15 @@ A highly customizable, animated gradient background component for React applicat
 
 ## Installation
 
-````bash
+```bash
 npm install react-gradient-animation
 ```
+
 Or with Yarn:
+
 ```bash
 yarn add react-gradient-animation
-````
+```
 
 ## Usage
 
