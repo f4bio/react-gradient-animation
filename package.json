@@ -1,0 +1,47 @@
+{
+  "name": "react-gradient-animation",
+  "version": "1.0.1",
+  "description": "A highly customizable, animated gradient background component for React applications.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "!src/**",
+    "dist",
+    "types"
+  ],
+  "keywords": [
+    "react",
+    "gradient",
+    "background",
+    "animation",
+    "canvas",
+    "animated",
+    "react-component",
+    "gradient-background",
+    "typescript"
+  ],
+  "author": "Stian Larsen",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stianlars1/react-gradient-animation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stianlars1/react-gradient-animation/issues"
+  },
+  "homepage": "https://github.com/stianlars1/react-gradient-animation#readme",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.4",
+    "@types/react": "^18.3.11",
+    "typescript": "^5.6.2"
+  }
+}
