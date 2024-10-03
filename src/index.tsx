@@ -188,7 +188,7 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     translateYcorrection,
   ]);
 
-  return <canvas ref={canvasRef} className={className} />;
+  return <canvas style={style} ref={canvasRef} className={className} />;
 };
 
 export { GradientBackground };
