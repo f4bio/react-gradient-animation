@@ -49,6 +49,7 @@ export interface GradientBackgroundProps {
     className?: string;
     translateYcorrection?: boolean;
     style?: React.CSSProperties;
+    onLoaded?: () => void;
 }
 export interface RGB {
     r: number;

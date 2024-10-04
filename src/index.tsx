@@ -23,6 +23,7 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
   className = "",
   translateYcorrection = true,
   style = {},
+  onLoaded,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);
@@ -38,6 +39,39 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     shapes: initialShapes,
     c: { w: 0, h: 0 },
   });
+
+  // Compute styles before render
+  const computedStyles: React.CSSProperties = React.useMemo(() => {
+    // Use a default width during SSR
+    const defaultWidth = 1920;
+
+    // Check if window is defined
+    const canvasWidth =
+      configRef.current.c.w ||
+      (typeof window !== "undefined" ? window.innerWidth : defaultWidth);
+
+    const translateY = translateYcorrection
+      ? `translateY(-${Math.ceil(
+          Math.tan((Math.abs(skew) * Math.PI) / 180) * (canvasWidth / 2)
+        )}px)`
+      : "";
+
+    const skewValue = `skewY(${skew}deg) ${translateY}`;
+
+    return {
+      transform: skewValue,
+      WebkitTransform: skewValue,
+      position: "absolute",
+      top: "0",
+      left: "0",
+      width: "100%",
+      height: "100%",
+      zIndex: -1,
+      pointerEvents: "none",
+      backgroundColor: colors.background,
+      ...style,
+    };
+  }, [skew, translateYcorrection, colors.background, style]);
 
   const initParticles = (): void => {
     const { count, colors, shapes, opacity } = configRef.current;
@@ -84,32 +118,6 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     ctx.scale(dpr, dpr);
   };
 
-  const computeStyles = (): React.CSSProperties => {
-    const translateY = translateYcorrection
-      ? `translateY(-${Math.ceil(
-          Math.tan((Math.abs(configRef.current.skew) * Math.PI) / 180) *
-            (configRef.current.c.w / 2)
-        )}px)`
-      : "";
-
-    const skewValue = `skewY(${configRef.current.skew}deg) ${translateY}`;
-
-    const dynamicStyles: React.CSSProperties = {
-      transform: skewValue,
-      WebkitTransform: skewValue,
-      position: "absolute",
-      top: "0",
-      left: "0",
-      width: "100%",
-      height: "100%",
-      zIndex: -1,
-      pointerEvents: "none",
-      backgroundColor: colors.background,
-    };
-
-    return { ...dynamicStyles, ...style };
-  };
-
   const handleResize = (): void => {
     const canvas = canvasRef.current;
 
@@ -147,8 +155,6 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const parent = canvas.parentElement;
-    if (!parent) return;
 
     adjustCanvasSize(canvas, ctx);
 
@@ -161,13 +167,13 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     initParticles();
     animate(ctx, configRef.current.c.w, configRef.current.c.h);
 
-    const computedStyles = computeStyles();
-    Object.entries(computedStyles).forEach(([key, value]) => {
-      (canvas.style as any)[key] = value;
-    });
-
     const debouncedHandleResize = debounce(handleResize, 100);
     window.addEventListener("resize", debouncedHandleResize);
+
+    // Call the onLoaded prop if provided
+    if (onLoaded) {
+      onLoaded();
+    }
 
     return () => {
       window.removeEventListener("resize", debouncedHandleResize);
@@ -184,11 +190,13 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     opacity,
     skew,
     initialShapes,
-    className,
     translateYcorrection,
+    onLoaded,
   ]);
 
-  return <canvas style={style} ref={canvasRef} className={className} />;
+  return (
+    <canvas ref={canvasRef} className={className} style={computedStyles} />
+  );
 };
 
 export { GradientBackground };
