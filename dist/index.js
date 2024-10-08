@@ -32,11 +32,15 @@ var GradientBackground = function (_a) {
         shapes: initialShapes,
         c: { w: 0, h: 0 },
     });
+    // Utility to detect mobile devices
+    var isMobile = function () {
+        if (typeof window === "undefined")
+            return false;
+        return /Mobi|Android/i.test(window.navigator.userAgent);
+    };
     // Compute styles before render
     var computedStyles = React.useMemo(function () {
-        // Use a default width during SSR
         var defaultWidth = 1920;
-        // Check if window is defined
         var canvasWidth = configRef.current.c.w ||
             (typeof window !== "undefined" ? window.innerWidth : defaultWidth);
         var translateY = translateYcorrection
@@ -92,7 +96,19 @@ var GradientBackground = function (_a) {
         }
     };
     useEffect(function () {
-        configRef.current = __assign(__assign({}, configRef.current), { count: count, size: size, speed: speed, colors: colors, blending: blending, opacity: opacity, skew: skew, shapes: initialShapes });
+        // Adjust particle count and speed for mobile devices
+        if (isMobile()) {
+            configRef.current.count = Math.floor(count / 2);
+            configRef.current.speed = {
+                x: { min: speed.x.min * 0.5, max: speed.x.max * 0.5 },
+                y: { min: speed.y.min * 0.5, max: speed.y.max * 0.5 },
+            };
+        }
+        else {
+            configRef.current.count = count;
+            configRef.current.speed = speed;
+        }
+        configRef.current = __assign(__assign({}, configRef.current), { size: size, colors: colors, blending: blending, opacity: opacity, skew: skew, shapes: initialShapes });
         var canvas = canvasRef.current;
         if (!canvas)
             return;
@@ -106,14 +122,20 @@ var GradientBackground = function (_a) {
         ctx.globalCompositeOperation = validBlending;
         initParticles();
         animate(ctx, configRef.current.c.w, configRef.current.c.h);
-        var debouncedHandleResize = debounce(handleResize, 100);
+        var debouncedHandleResize = debounce(handleResize, 200);
         window.addEventListener("resize", debouncedHandleResize);
-        // Call the onLoaded prop if provided
+        var handleVisibilityChange = function () {
+            if (!document.hidden) {
+                handleResize();
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
         if (onLoaded) {
             onLoaded();
         }
         return function () {
             window.removeEventListener("resize", debouncedHandleResize);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
             if (animationRef.current) {
                 window.cancelAnimationFrame(animationRef.current);
             }

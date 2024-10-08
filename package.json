@@ -3,7 +3,6 @@
   "version": "1.0.5",
   "description": "A highly customizable, animated gradient background component for React applications.",
   "main": "dist/index.js",
-  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",

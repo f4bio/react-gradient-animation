@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef } from "react";
+
 import { debounce, hexToRgb, isValidBlendingMode } from "./gradientUtils";
 import {
   GradientBackgroundProps,
@@ -39,15 +40,12 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     c: { w: 0, h: 0 },
   });
 
-  // Utility to detect mobile devices
-  const isMobile = (): boolean => {
-    if (typeof window === "undefined") return false;
-    return /Mobi|Android/i.test(window.navigator.userAgent);
-  };
-
   // Compute styles before render
   const computedStyles: React.CSSProperties = React.useMemo(() => {
+    // Use a default width during SSR
     const defaultWidth = 1920;
+
+    // Check if window is defined
     const canvasWidth =
       configRef.current.c.w ||
       (typeof window !== "undefined" ? window.innerWidth : defaultWidth);
@@ -116,11 +114,13 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     canvas.height = configRef.current.c.h * dpr;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
     ctx.scale(dpr, dpr);
   };
 
   const handleResize = (): void => {
     const canvas = canvasRef.current;
+
     if (canvas) {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
@@ -130,6 +130,7 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
       }
 
       adjustCanvasSize(canvas, ctx);
+
       initParticles();
 
       const { c } = configRef.current;
@@ -138,21 +139,11 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
   };
 
   useEffect(() => {
-    // Adjust particle count and speed for mobile devices
-    if (isMobile()) {
-      configRef.current.count = Math.floor(count / 2);
-      configRef.current.speed = {
-        x: { min: speed.x.min * 0.5, max: speed.x.max * 0.5 },
-        y: { min: speed.y.min * 0.5, max: speed.y.max * 0.5 },
-      };
-    } else {
-      configRef.current.count = count;
-      configRef.current.speed = speed;
-    }
-
     configRef.current = {
       ...configRef.current,
+      count,
       size,
+      speed,
       colors,
       blending,
       opacity,
@@ -176,24 +167,16 @@ const GradientBackground: React.FC<GradientBackgroundProps> = ({
     initParticles();
     animate(ctx, configRef.current.c.w, configRef.current.c.h);
 
-    const debouncedHandleResize = debounce(handleResize, 200);
+    const debouncedHandleResize = debounce(handleResize, 100);
     window.addEventListener("resize", debouncedHandleResize);
 
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        handleResize();
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
+    // Call the onLoaded prop if provided
     if (onLoaded) {
       onLoaded();
     }
 
     return () => {
       window.removeEventListener("resize", debouncedHandleResize);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (animationRef.current) {
         window.cancelAnimationFrame(animationRef.current);
       }
