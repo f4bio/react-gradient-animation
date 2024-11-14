@@ -1,4 +1,4 @@
-import { getRandom, getRandomDirection, isValidBlendingMode, } from "../gradientUtils";
+import { getRandom, getRandomDirection, isValidBlendingMode, } from "./gradientUtils";
 var Particle = /** @class */ (function () {
     function Particle(color, shape, options, opacity) {
         this.color = color;

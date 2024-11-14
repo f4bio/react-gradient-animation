@@ -1,4 +1,4 @@
-import React from "react";
-import { GradientBackgroundProps } from "./types/types";
-declare const GradientBackground: React.FC<GradientBackgroundProps>;
-export { GradientBackground };
+export * from "./gradientBackground";
+export * from "./types";
+export * from "./gradientUtils";
+export * from "./particles";

@@ -9,7 +9,7 @@
 node_modules/
 *.log
 *.tsbuildinfo
-
+index_backup.tsx
 # configuration files
 # tsconfig.json
 .npmignore

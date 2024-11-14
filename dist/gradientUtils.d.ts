@@ -1,4 +1,4 @@
-import { RGB } from "./types/types";
+import { RGB } from "./types";
 export declare const isValidBlendingMode: (mode: string) => mode is GlobalCompositeOperation;
 export declare const debounce: (func: (...args: any[]) => void, wait: number) => (...args: any[]) => void;
 export declare const hexToRgb: (hex: string) => RGB;

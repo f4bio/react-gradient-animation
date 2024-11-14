@@ -1,4 +1,3 @@
-// List of valid global composite operations
 var validBlendingModes = [
     "source-over",
     "source-in",
