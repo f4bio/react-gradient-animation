@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "npx rimraf dist",
     "build": "npx tsc",
-    "prepare": "npx --package=del-cli del --force dist"
+    "prepare": "npm run clean && npm run build"
   },
   "exports": {
     ".": {
